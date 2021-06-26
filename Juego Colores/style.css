@@ -1,34 +1,4 @@
-<template>
-  <div id="app">
-    
-    <ColorSquare />
-  </div>
-</template>
-
-<script>
-import ColorSquare from './components/ColorSquare.vue'
-
-export default {
-  name: 'App',
-  components: {
-    ColorSquare
-  }
-}
-</script>
-
-<style>
-
-#header {
-	transition: all 0.3s;
-	background: steelblue;
-	text-transform: uppercase;
-	text-align: center;
-	margin: 0;
-	color: white;
-
-  }
-
-  body {
+body {
 	background: #232323;
 	margin: 0;
 	font-family: "Montserrat", "Avenir";
@@ -40,7 +10,6 @@ h1 {
 	padding: 20px 0;
 
 }
-
 #navigator {
 
 	background: #ffffff;
@@ -50,10 +19,19 @@ h1 {
 	margin-top: -30px;
 
 }
-
+#header {
+	transition: all 0.3s;
+	background: steelblue;
+	text-transform: uppercase;
+	text-align: center;
+	margin: 0;
+	color: white;
+	
+}
 #colorDisplay {
 	font-size: 200%;
 }
+
 
 .square {
 	width: 30%;
@@ -67,7 +45,6 @@ h1 {
 	-moz-transition: background 0.8s;
 
 }
-
 #container {
 	margin: 20px auto;
 	max-width: 600px;
@@ -101,4 +78,3 @@ button:hover {
 	color: white;
 	background-color: steelblue;
 }
-</style>

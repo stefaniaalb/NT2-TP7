@@ -1,104 +1,123 @@
 <template>
   <div id="app">
-    
-    <ColorSquare />
+    <Header :pickedColor="pickedColor" :winner="winner" />
+    <Navigator
+      :difficulty="difficulty"
+      :message="message"
+      :reset="reset"
+      :setDifficulty="setDifficulty"
+			:winner="winner"
+    />
+    <div id="container">
+      <Square
+        v-for="(color, index) in colorCount"
+        :color="colors[index]"
+        :key="index"
+				:onClick="() => onSquareClick(index)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import ColorSquare from './components/ColorSquare.vue'
+import Header from "./components/Header.vue";
+import Navigator from "./components/Navigator.vue";
+import Square from "./components/Square.vue";
+import { HARD } from "./difficulties";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    ColorSquare
-  }
-}
+    Header,
+    Navigator,
+    Square,
+  },
+  data() {
+    return {
+      colors: [],
+      difficulty: HARD,
+			message: "",
+			pickedColor: "",
+			winner: false,
+    };
+  },
+  mounted() {
+    this.init();
+  },
+  computed: {
+    isHard() {
+      return this.difficulty === HARD;
+    },
+    colorCount() {
+      return this.isHard ? 6 : 3;
+    },
+  },
+  methods: {
+    createNewColors(quantity) {
+      const arr = [];
+
+      for (let i = 0; i < quantity; i++) {
+        arr.push(this.createRandomStringColor());
+      }
+
+      return arr;
+    },
+
+    createRandomStringColor() {
+      return `rgb(${this.randomInt()}, ${this.randomInt()}, ${this.randomInt()})`;
+    },
+	
+		init() {
+			this.colors = this.createNewColors(this.colorCount);
+			this.pickedColor = this.colors[this.pickColor()];
+		},
+
+		onSquareClick(index) {
+			const clickedColor = this.colors[index];
+
+			if (clickedColor === this.pickedColor) {
+				this.winner = true;
+				this.colors = this.colors.map(() => this.pickedColor);
+				this.message = "You Picked Right!";
+			} else {
+				this.colors = this.colors.map((color, idx) => idx === index ? "#232323" : color);
+				this.message = "Try Again!";
+			}
+		},
+
+    pickColor() {
+      return Math.floor(Math.random() * this.colorCount);
+    },
+
+    randomInt() {
+      return Math.floor(Math.random() * 256);
+    },
+
+    reset() {
+			this.$store.state.message = "";
+			this.$store.statewinner = false;
+			this.init();
+    },
+
+    setDifficulty(difficulty) {
+			if (this.difficulty !== difficulty) {
+				this.difficulty = difficulty;
+				this.reset();
+			}
+    },
+  },
+};
 </script>
 
 <style>
-
-#header {
-	transition: all 0.3s;
-	background: steelblue;
-	text-transform: uppercase;
-	text-align: center;
-	margin: 0;
-	color: white;
-
-  }
-
-  body {
-	background: #232323;
-	margin: 0;
-	font-family: "Montserrat", "Avenir";
-}
-
-h1 {
-	font-weight: normal;
-	line-height: 1.1;
-	padding: 20px 0;
-
-}
-
-#navigator {
-
-	background: #ffffff;
-	height: 30px;
-	text-align: center;
-	margin: 0;
-	margin-top: -30px;
-
-}
-
-#colorDisplay {
-	font-size: 200%;
-}
-
-.square {
-	width: 30%;
-	background: blue;
-	padding-bottom: 30%;
-	float: left;
-	margin: 1.66%;
-	border-radius: 10%;
-	transition: background 0.8s;
-	-webkit-transition: background 0.8s;
-	-moz-transition: background 0.8s;
-
+body {
+  background: #232323;
+  margin: 0;
+  font-family: "Montserrat", "Avenir";
 }
 
 #container {
-	margin: 20px auto;
-	max-width: 600px;
-}
-#message {
-	color: #ffffff;
-	display: inline-block;
-	width: 20%;
-}
-
-#messageBox {
-	
-}
-.selected {
-	background-color: steelblue;
-	color: white;
-}
-button {
-	border: none;
-	background-color: white;
-	font-family: "Montserrat", "Avenir";
-	text-transform: uppercase;
-	height: 100%;
-	font-weight: 700;
-	letter-spacing: 1px;
-	color: steelblue;
-	transition: all 0.3s;
-	outline: none;
-}
-button:hover {
-	color: white;
-	background-color: steelblue;
+  margin: 20px auto;
+  max-width: 600px;
 }
 </style>
